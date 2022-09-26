@@ -56,7 +56,9 @@ function App() {
         return;
     }
     setAnswer(math);
-    if (a && b && signCheck) {
+
+    //if onSign Pressed.
+    if (a && b && symbol) {
       setMain(math + symbol);
       setSign(symbol);
       setA(math);
@@ -77,12 +79,18 @@ function App() {
 
     if (!main) {
       return;
-    } else if (sign) {
+    } else if (sign && main.charAt(0) !== "-") {
       const copy = main.replace(regex, symbol);
       setSign(symbol);
       setMain(copy);
       return;
+    } else if (sign && main.charAt(0) === "-") {
+      const copy = main.slice(1).replace(regex, symbol);
+      setSign(symbol);
+      setMain("-" + copy);
+      return;
     }
+
     if (!signCheck) setSignCheck(true);
     setSign(symbol);
     setMain(main + symbol);
