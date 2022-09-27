@@ -151,7 +151,7 @@ function App() {
     <div className="App">
       <h1>Calculator</h1>
       <div className="container">
-        <div>
+        <div style={{ display: "none" }}>
           <TextField
             value={a}
             onChange={onA}
@@ -187,19 +187,20 @@ function App() {
         <div>
           <TextField
             onChange={onMain}
-            label="main"
+            // label="main"
             id="outlined-hidden-label"
             variant="outlined"
             size="small"
             value={main}
+            disabled
           />
-          <TextField
+          {/* <TextField
             onChange={onAnswer}
             value={answer}
             id="outlined-hidden-label"
             variant="outlined"
             size="small"
-          />
+          /> */}
         </div>
         <table>
           <thead></thead>
