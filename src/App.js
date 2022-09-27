@@ -9,6 +9,7 @@ function App() {
   const [answer, setAnswer] = useState("");
   const [sign, setSign] = useState("");
   const [signCheck, setSignCheck] = useState(false);
+  const [percentage, setPercentage] = useState(false);
   const [a, setA] = useState("");
   const [b, setB] = useState("");
 
@@ -28,7 +29,24 @@ function App() {
     setAnswer(e.target.value);
   };
 
+  const plusMinus = () => {
+    if (a && !signCheck) {
+      setA(String(a * -1));
+      setMain(String(a * -1));
+    } else if (a && b && sign && signCheck) {
+      setB(String(b * -1));
+      setMain(String(a + sign + b * -1));
+    }
+  };
+
   const numPress = (num) => {
+    if (a && b && sign && answer) {
+      reset();
+      setA(String(num));
+      setMain(String(num));
+      return;
+    }
+
     setMain(main + num);
     if (!signCheck) {
       setA(a + num);
@@ -55,7 +73,6 @@ function App() {
       default:
         return;
     }
-    setAnswer(math);
 
     //if onSign Pressed.
     if (a && b && symbol) {
@@ -63,9 +80,18 @@ function App() {
       setSign(symbol);
       setA(math);
       setB("");
+      setAnswer("");
       if (!symbol) {
         setSignCheck(false);
       }
+    } else {
+      setAnswer("");
+      setA(math);
+      setB("");
+      // setMain(math + sign + b);
+      setMain(math);
+      setSignCheck(false);
+      setSign("");
     }
   };
 
@@ -82,12 +108,12 @@ function App() {
     } else if (sign && main.charAt(0) !== "-") {
       const copy = main.replace(regex, symbol);
       setSign(symbol);
-      setMain(copy);
+      setMain(String(copy));
       return;
     } else if (sign && main.charAt(0) === "-") {
       const copy = main.slice(1).replace(regex, symbol);
       setSign(symbol);
-      setMain("-" + copy);
+      setMain(String("-" + copy));
       return;
     }
 
@@ -103,20 +129,21 @@ function App() {
     setA("");
     setB("");
     setSignCheck(false);
+    setPercentage(false);
   };
 
   const deleteNum = () => {
     if (!signCheck) {
-      setA(a.slice(0, -1));
-      setMain(main.slice(0, -1));
+      setA(String(a.slice(0, -1)));
+      setMain(String(main.slice(0, -1)));
     } else {
       if (!b && sign) {
-        setMain(main.slice(0, -1));
+        setMain(String(main.slice(0, -1)));
         setSign("");
         setSignCheck(false);
       }
-      setB(b.slice(0, -1));
-      setMain(main.slice(0, -1));
+      setB(String(b.slice(0, -1)));
+      setMain(String(main.slice(0, -1)));
     }
   };
 
@@ -149,8 +176,14 @@ function App() {
             variant="outlined"
             size="small"
           />
+          {/* <TextField
+            value={percentage}
+            label="%"
+            id="outlined-hidden-label"
+            variant="outlined"
+            size="small"
+          /> */}
         </div>
-        <hr />
         <div>
           <TextField
             onChange={onMain}
@@ -167,25 +200,27 @@ function App() {
             variant="outlined"
             size="small"
           />
-          <Button onClick={deleteNum} variant="contained">
-            del
-          </Button>
         </div>
         <table>
           <thead></thead>
           <tbody>
             <tr>
-              <td>
-                <Button onClick={reset} variant="contained">
+              <td colSpan={2}>
+                <Button
+                  style={{ width: "-webkit-fill-available" }}
+                  onClick={reset}
+                  variant="contained"
+                  color="error"
+                >
                   C
                 </Button>
               </td>
               <td>
-                <Button variant="contained">()</Button>
+                <Button onClick={deleteNum} variant="contained">
+                  del
+                </Button>
               </td>
-              <td>
-                <Button variant="contained">%</Button>
-              </td>
+
               <td>
                 <Button
                   onClick={() => {
@@ -325,7 +360,9 @@ function App() {
             </tr>
             <tr>
               <td>
-                <Button variant="contained">+/-</Button>
+                <Button onClick={plusMinus} variant="contained">
+                  +/-
+                </Button>
               </td>
               <td>
                 <Button
